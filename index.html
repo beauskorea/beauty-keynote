@@ -24,6 +24,15 @@
 <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=618414301663252&ev=PageView&noscript=1" alt="" /></noscript>
 <!-- End Meta Pixel Code -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BP0X40B70D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BP0X40B70D');
+</script>
+<!-- End Google tag -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
@@ -206,9 +215,11 @@
 
       function show(text, cls) { msg.textContent = text; msg.className = 'sub-msg ' + cls; }
       function track(name, params, custom) {
-        if (typeof fbq !== 'function') return;
-        if (custom) { fbq('trackCustom', name, params || {}); }
-        else { fbq('track', name, params || {}); }
+        if (typeof fbq === 'function') {
+          if (custom) { fbq('trackCustom', name, params || {}); }
+          else { fbq('track', name, params || {}); }
+        }
+        if (typeof gtag === 'function') { gtag('event', name, params || {}); }
       }
       function unlock() {
         reveal.classList.add('show');
