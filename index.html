@@ -98,6 +98,10 @@
   .consent .ck em { font-style: normal; font-weight: 700; color: #ff7aac; }
   .consent .ck em.opt { color: #a78bff; }
   .consent-detail { font-size: 11.5px; color: #75758a; line-height: 1.65; margin: 7px 0 0 27px; }
+  .optbox { margin-top: 15px; background: linear-gradient(160deg, rgba(123,92,255,.12), rgba(255,45,120,.06)); border: 1px solid rgba(123,92,255,.34); border-radius: 13px; padding: 14px 15px 15px; }
+  .optbox-hook { font-size: 13px; font-weight: 700; color: #bcaaff; margin-bottom: 10px; line-height: 1.45; }
+  .optbox .consent { margin-top: 0; }
+  .optbox .consent-detail { margin: 8px 0 0 27px; color: #8a86a8; }
 
   .sub-msg { font-size: 13px; margin-top: 14px; min-height: 18px; }
   .sub-msg.ok { color: #7ee0a8; }
@@ -145,11 +149,14 @@
         </label>
         <p class="consent-detail">입력하신 이메일 주소는 K-뷰티 키노트 자료 발송을 위해 수집·이용됩니다. 수집된 정보는 자료 발송 및 관련 문의 대응 목적 외에는 사용되지 않으며, 목적 달성 후 또는 요청 시 파기됩니다.</p>
 
-        <label class="consent" for="agreeNews">
-          <input type="checkbox" id="agreeNews" />
-          <span class="ck"><em class="opt">[선택]</em> 월 1회 뷰스레터 수신에 동의합니다.</span>
-        </label>
-        <p class="consent-detail">뷰스레터는 뷰스컴퍼니가 정리하는 K-뷰티 글로벌 마케팅·콘텐츠·크리에이터·유통·커머스 인사이트를 월 1회 이메일로 보내드립니다. 언제든지 수신 거부할 수 있습니다.</p>
+        <div class="optbox">
+          <div class="optbox-hook">💌 이번 키노트 같은 자료, 매달 하나씩 더 받아보고 싶다면</div>
+          <label class="consent" for="agreeNews">
+            <input type="checkbox" id="agreeNews" />
+            <span class="ck"><em class="opt">[선택]</em> 월 1회 뷰스레터 수신에 동의합니다.</span>
+          </label>
+          <p class="consent-detail">뷰스컴퍼니가 현장에서 검증한 K-뷰티 글로벌 마케팅·콘텐츠·크리에이터·유통·커머스 인사이트를 월 1회 정리해 보내드려요. 스팸 없이 딱 월 1회, 언제든 수신 거부할 수 있습니다.</p>
+        </div>
 
         <p class="sub-msg" id="subMsg"></p>
         <div class="dl-reveal" id="dlReveal">
@@ -199,10 +206,10 @@
         })
           .then(function (r) { return r.json().catch(function () { return {}; }); })
           .then(function (d) {
-            var code = ((d.code || '') + '');
+            var code = ((d.code || d.Code || '') + '');
             var text = ((d.message || d.Message || '') + '');
-            var okNew = code.indexOf('Succeed') === 0 || (d.httpStatusCode && d.httpStatusCode < 400);
-            var already = code.indexOf('NonConfirm') > -1 || code.indexOf('AlreadyExist') > -1 || text.indexOf('이미') > -1;
+            var okNew = code.indexOf('Succeed') === 0;
+            var already = code.indexOf('AlreadyExist') > -1 || text.indexOf('이미') > -1;
             if (already) {
               show('이미 신청된 이메일입니다. 아래 버튼을 눌러 키노트 자료를 바로 받아보세요.', 'ok');
               unlock();
