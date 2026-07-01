@@ -8,6 +8,22 @@
 <meta property="og:title" content="K-뷰티 키노트 자료 신청 | 뷰스컴퍼니" />
 <meta property="og:description" content="GLOBAL K-BEAUTY CONFERENCE 2026 매일경제 초청 키노트 자료를 이메일로 신청하세요." />
 <meta property="og:type" content="website" />
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '618414301663252');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=618414301663252&ev=PageView&noscript=1" alt="" /></noscript>
+<!-- End Meta Pixel Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
@@ -189,10 +205,16 @@
       var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       function show(text, cls) { msg.textContent = text; msg.className = 'sub-msg ' + cls; }
+      function track(name, params, custom) {
+        if (typeof fbq !== 'function') return;
+        if (custom) { fbq('trackCustom', name, params || {}); }
+        else { fbq('track', name, params || {}); }
+      }
       function unlock() {
         reveal.classList.add('show');
         setTimeout(function () { dlLink.click(); }, 400);
       }
+      dlLink.addEventListener('click', function () { track('Download', { content_name: 'K-beauty Keynote PDF' }, true); });
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -214,9 +236,12 @@
             var already = code.indexOf('AlreadyExist') > -1 || text.indexOf('이미') > -1;
             if (already) {
               show('이미 신청된 이메일입니다. 아래 버튼을 눌러 키노트 자료를 바로 받아보세요.', 'ok');
+              track('CompleteRegistration', { status: 'already' });
               unlock();
             } else if (okNew) {
               show('신청이 완료되었습니다. 아래 버튼에서 키노트 자료를 받아보세요.', 'ok');
+              track('Lead');
+              if (agreeNews.checked) track('NewsletterOptIn', null, true);
               unlock();
             } else {
               show(text || '잠시 후 다시 시도해 주세요.', 'err');
