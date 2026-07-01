@@ -142,6 +142,11 @@
   }
   .sub-form button:active { transform: translateY(1px) scale(.99); }
   .sub-form button:disabled { opacity: .55; cursor: default; }
+  .consent { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; cursor: pointer; }
+  .consent input { flex-shrink: 0; width: 17px; height: 17px; margin-top: 1px; accent-color: var(--accent); cursor: pointer; }
+  .consent span { font-size: 13px; color: #c3c3d2; line-height: 1.5; }
+  .consent span b { color: var(--text); font-weight: 700; }
+  .consent-detail { font-size: 11.5px; color: #6f6f85; line-height: 1.6; margin: 8px 0 4px 26px; }
   .sub-msg { font-size: 13px; margin-top: 12px; min-height: 18px; }
   .sub-msg.ok { color: #7ee0a8; }
   .sub-msg.err { color: #ff8fae; }
@@ -175,6 +180,11 @@
           <input type="email" id="subEmail" placeholder="이메일 주소" autocomplete="email" required />
           <button type="submit" id="subBtn">자료 받기</button>
         </form>
+        <label class="consent" for="subAgree">
+          <input type="checkbox" id="subAgree" />
+          <span><b>[필수]</b> 개인정보 수집·이용에 동의합니다.</span>
+        </label>
+        <p class="consent-detail">뉴스레터 발송을 위한 최소한의 개인정보(이메일)를 수집·이용합니다. 수집된 정보는 발송 외 다른 목적으로 이용되지 않으며, 서비스 종료 또는 구독 해지 시 즉시 파기됩니다.</p>
         <p class="sub-msg" id="subMsg"></p>
         <div class="dl-reveal" id="dlReveal">
           <a class="cta-primary" href="beauty-marketing-keynote.pdf" download="뷰스컴퍼니_K뷰티_키노트_자료.pdf">
@@ -194,6 +204,7 @@
     (function () {
       var form = document.getElementById('subForm');
       var email = document.getElementById('subEmail');
+      var agree = document.getElementById('subAgree');
       var btn = document.getElementById('subBtn');
       var msg = document.getElementById('subMsg');
       var reveal = document.getElementById('dlReveal');
@@ -212,6 +223,7 @@
         e.preventDefault();
         var v = email.value.trim();
         if (!valid.test(v)) { show('올바른 이메일 주소를 입력해 주세요.', 'err'); email.focus(); return; }
+        if (!agree.checked) { show('개인정보 수집·이용에 동의해 주세요.', 'err'); return; }
         btn.disabled = true; btn.textContent = '처리 중…';
         fetch(LIST, {
           method: 'POST',
