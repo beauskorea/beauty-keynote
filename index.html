@@ -107,7 +107,30 @@
   }
   .cta-sub:active { background: #20202c; }
   .cta-sub span { color: var(--accent); }
-  .note { font-size: 12px; color: #6f6f85; text-align: center; margin: 8px 0 48px; }
+  .note { font-size: 12px; color: #6f6f85; text-align: center; margin: 8px 0 34px; }
+  .subscribe {
+    text-align: left; margin-top: 8px;
+    background: linear-gradient(160deg, #16161f, #0f0f16);
+    border: 1px solid #262636; border-radius: 18px; padding: 28px 22px 24px;
+  }
+  .subscribe .hb {
+    display: inline-block; font-size: 12px; font-weight: 700; color: #ffb3d0;
+    background: rgba(255,45,120,.12); border: 1px solid rgba(255,45,120,.3);
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 16px;
+  }
+  .subscribe h2 { font-size: 21px; font-weight: 900; line-height: 1.42; letter-spacing: -.015em; margin-bottom: 12px; }
+  .subscribe h2 .hl2 {
+    background: linear-gradient(90deg, #ff5c9a, #a78bff);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subscribe .sp { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+  .hook-list { list-style: none; margin-bottom: 22px; }
+  .hook-list li { position: relative; padding-left: 26px; margin-bottom: 10px; font-size: 14px; color: #dcdce6; }
+  .hook-list li::before { content: "✓"; position: absolute; left: 2px; top: 0; color: #a78bff; font-weight: 900; }
+  .form-embed { border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+  .form-embed iframe { width: 100%; height: 560px; border: 0; display: block; }
+  .form-fallback { text-align: center; font-size: 12px; color: #6f6f85; margin-top: 12px; }
+  .form-fallback a { color: #ff5c9a; text-decoration: none; }
   .divider { height: 1px; background: linear-gradient(90deg, transparent, #2a2a3a, transparent); margin: 8px 0 32px; }
   footer { text-align: center; padding: 24px 0 48px; font-size: 12px; color: #55556a; }
   footer .brand { color: var(--muted); font-weight: 700; letter-spacing: .04em; }
@@ -145,10 +168,22 @@
         <small>PDF · 클릭하면 바로 저장됩니다</small>
       </a>
 
-      <a class="cta-sub" href="https://page.stibee.com/subscriptions/353681" target="_blank" rel="noopener">
-        ✉️ <span>뷰스레터</span> 구독하고 매주 인사이트 받기
-      </a>
-      <p class="note">구독은 선택이에요. 자료는 위 버튼에서 바로 받을 수 있어요.</p>
+      <p class="note">PDF는 바로 저장돼요. 아래에서 뷰스레터도 함께 받아보세요.</p>
+
+      <div class="subscribe">
+        <span class="hb">✉️ 이 자료, 매주 오는 버전</span>
+        <h2>키노트 한 장으로 끝내지 말고,<br /><span class="hl2">글로벌 확장의 다음 수</span>를<br />매주 이메일로 받아보세요.</h2>
+        <p class="sp">뷰스컴퍼니 박진호 대표가 현장에서 검증한 K-뷰티 글로벌 전략을, 실전 사례와 함께 정리해 보냅니다.</p>
+        <ul class="hook-list">
+          <li>올리브영·APR·틱톡·코스맥스가 실제로 움직인 방식</li>
+          <li>소재–브랜드–유통 에코시스템의 최신 흐름</li>
+          <li>광고·크리에이터로 해외 매출 만든 실전 케이스</li>
+        </ul>
+        <div class="form-embed">
+          <iframe src="https://page.stibee.com/subscriptions/353681" title="뷰스레터 구독" loading="lazy"></iframe>
+        </div>
+        <p class="form-fallback">폼이 안 보이나요? <a href="https://page.stibee.com/subscriptions/353681" target="_blank" rel="noopener">여기서 구독하기 →</a></p>
+      </div>
 
       <div class="divider"></div>
       <footer>
