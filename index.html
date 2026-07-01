@@ -127,10 +127,27 @@
   .hook-list { list-style: none; margin-bottom: 22px; }
   .hook-list li { position: relative; padding-left: 26px; margin-bottom: 10px; font-size: 14px; color: #dcdce6; }
   .hook-list li::before { content: "✓"; position: absolute; left: 2px; top: 0; color: #a78bff; font-weight: 900; }
-  .form-embed { border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
-  .form-embed iframe { width: 100%; height: 560px; border: 0; display: block; }
-  .form-fallback { text-align: center; font-size: 12px; color: #6f6f85; margin-top: 12px; }
-  .form-fallback a { color: #ff5c9a; text-decoration: none; }
+  .sub-form { display: flex; gap: 8px; margin-top: 4px; }
+  .sub-form input {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 15px; color: var(--text);
+    background: #0d0d14; border: 1px solid #33334a; border-radius: 12px; padding: 15px 16px;
+    outline: none; transition: border-color .12s ease;
+  }
+  .sub-form input::placeholder { color: #6f6f85; }
+  .sub-form input:focus { border-color: var(--accent2); }
+  .sub-form button {
+    flex-shrink: 0; font-family: inherit; font-size: 15px; font-weight: 700; color: #fff; cursor: pointer;
+    background: linear-gradient(90deg, var(--accent), var(--accent2)); border: 0; border-radius: 12px; padding: 0 20px;
+    transition: transform .12s ease, opacity .12s ease;
+  }
+  .sub-form button:active { transform: translateY(1px) scale(.99); }
+  .sub-form button:disabled { opacity: .55; cursor: default; }
+  .sub-msg { font-size: 13px; margin-top: 12px; min-height: 18px; }
+  .sub-msg.ok { color: #7ee0a8; }
+  .sub-msg.err { color: #ff8fae; }
+  .dl-reveal { display: none; margin-top: 16px; }
+  .dl-reveal.show { display: block; animation: fadeUp .35s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   .divider { height: 1px; background: linear-gradient(90deg, transparent, #2a2a3a, transparent); margin: 8px 0 32px; }
   footer { text-align: center; padding: 24px 0 48px; font-size: 12px; color: #55556a; }
   footer .brand { color: var(--muted); font-weight: 700; letter-spacing: .04em; }
@@ -154,15 +171,17 @@
       <div class="subscribe">
         <span class="hb">✉️ 이메일 남기고 자료 받기</span>
         <h2>이메일만 남기면<br /><span class="hl2">자료 + 매주 인사이트</span></h2>
-        <div class="form-embed">
-          <iframe src="https://page.stibee.com/subscriptions/353681" title="뷰스레터 구독" loading="lazy"></iframe>
+        <form class="sub-form" id="subForm" novalidate>
+          <input type="email" id="subEmail" placeholder="이메일 주소" autocomplete="email" required />
+          <button type="submit" id="subBtn">자료 받기</button>
+        </form>
+        <p class="sub-msg" id="subMsg"></p>
+        <div class="dl-reveal" id="dlReveal">
+          <a class="cta-primary" href="beauty-marketing-keynote.pdf" download="뷰스컴퍼니_K뷰티_키노트_자료.pdf">
+            📥 키노트 자료 다운로드 (PDF)
+          </a>
         </div>
       </div>
-
-      <a class="cta-primary" href="beauty-marketing-keynote.pdf" download="뷰스컴퍼니_K뷰티_키노트_자료.pdf">
-        📥 키노트 자료 다운로드 (PDF)
-      </a>
-      <p class="note">구독 후 위 버튼에서 자료를 받으세요.</p>
 
       <div class="divider"></div>
       <footer>
@@ -171,5 +190,54 @@
       </footer>
     </div>
   </section>
+  <script>
+    (function () {
+      var form = document.getElementById('subForm');
+      var email = document.getElementById('subEmail');
+      var btn = document.getElementById('subBtn');
+      var msg = document.getElementById('subMsg');
+      var reveal = document.getElementById('dlReveal');
+      var LIST = 'https://page.stibee.com/api/v1.0/lists/353681';
+      var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function show(text, cls) { msg.textContent = text; msg.className = 'sub-msg ' + cls; }
+
+      function unlock(auto) {
+        reveal.classList.add('show');
+        var link = reveal.querySelector('a');
+        if (auto) { setTimeout(function () { link.click(); }, 400); }
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var v = email.value.trim();
+        if (!valid.test(v)) { show('올바른 이메일 주소를 입력해 주세요.', 'err'); email.focus(); return; }
+        btn.disabled = true; btn.textContent = '처리 중…';
+        fetch(LIST, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: v })
+        })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (d) {
+            var code = (d.code || '') + '';
+            if (code.indexOf('Succeed') === 0 || (d.httpStatusCode && d.httpStatusCode < 400)) {
+              show('구독 완료! 자료를 받아보세요. (확인 메일도 함께 발송했어요)', 'ok');
+              unlock(true);
+            } else if (code.indexOf('AlreadyExist') > -1 || (d.Message && d.Message.indexOf('이미') > -1)) {
+              show('이미 구독 중이에요. 바로 자료를 받아보세요.', 'ok');
+              unlock(true);
+            } else {
+              show(d.message || d.Message || '잠시 후 다시 시도해 주세요.', 'err');
+              btn.disabled = false; btn.textContent = '자료 받기';
+            }
+          })
+          .catch(function () {
+            show('네트워크 오류입니다. 잠시 후 다시 시도해 주세요.', 'err');
+            btn.disabled = false; btn.textContent = '자료 받기';
+          });
+      });
+    })();
+  </script>
 </body>
 </html>
