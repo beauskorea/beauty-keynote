@@ -179,11 +179,6 @@
         </div>
 
         <p class="sub-msg" id="subMsg"></p>
-        <div class="dl-reveal" id="dlReveal">
-          <a class="cta-primary" id="dlLink" href="beauty-marketing-keynote.pdf" download="뷰스컴퍼니_K뷰티_키노트_자료.pdf">
-            📥 키노트 자료 다운로드 PDF
-          </a>
-        </div>
       </div>
 
       <div class="cover">
@@ -208,8 +203,6 @@
       var agreeNews = document.getElementById('agreeNews');
       var btn = document.getElementById('subBtn');
       var msg = document.getElementById('subMsg');
-      var reveal = document.getElementById('dlReveal');
-      var dlLink = document.getElementById('dlLink');
       var ENDPOINT = 'https://webhook.beausdata.com/api/beausletter/subscribe';
       var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -221,12 +214,6 @@
         }
         if (typeof gtag === 'function') { gtag('event', name, params || {}); }
       }
-      function unlock() {
-        reveal.classList.add('show');
-        setTimeout(function () { dlLink.click(); }, 400);
-      }
-      dlLink.addEventListener('click', function () { track('Download', { content_name: 'K-beauty Keynote PDF' }, true); });
-
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var v = email.value.trim();
@@ -242,14 +229,14 @@
           .then(function (r) { return r.json().catch(function () { return {}; }); })
           .then(function (d) {
             if (d && d.ok && d.status === 'already') {
-              show('이미 신청된 이메일이에요. 아래 버튼에서 키노트 자료를 바로 받아보세요.', 'ok');
+              show('이미 신청하신 이메일이에요. 키노트 자료를 이메일로 다시 보내드렸어요 📩 메일함(스팸함)을 확인해 주세요.', 'ok');
               track('CompleteRegistration', { status: 'already' });
-              unlock();
+              btn.textContent = '전송 완료 ✓';
             } else if (d && d.ok) {
-              show('신청 완료! 키노트 자료를 이메일로 보내드렸어요 📩 아래에서 바로 받아보실 수도 있어요.', 'ok');
+              show('신청 완료! 키노트 자료를 이메일로 보내드렸어요 📩 잠시 후 메일함(스팸함)을 확인해 주세요.', 'ok');
               track('Lead');
               if (agreeNews.checked) track('NewsletterOptIn', null, true);
-              unlock();
+              btn.textContent = '전송 완료 ✓';
             } else {
               show('잠시 후 다시 시도해 주세요.', 'err');
               btn.disabled = false; btn.textContent = '키노트 자료 받기';
