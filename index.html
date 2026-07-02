@@ -210,7 +210,7 @@
       var msg = document.getElementById('subMsg');
       var reveal = document.getElementById('dlReveal');
       var dlLink = document.getElementById('dlLink');
-      var LIST = 'https://page.stibee.com/api/v1.0/lists/353681';
+      var ENDPOINT = 'https://webhook.beausdata.com/api/beausletter/subscribe';
       var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       function show(text, cls) { msg.textContent = text; msg.className = 'sub-msg ' + cls; }
@@ -234,28 +234,24 @@
         if (!agreeReq.checked) { show('개인정보 수집·이용(필수)에 동의해 주세요.', 'err'); return; }
         btn.disabled = true; btn.textContent = '처리 중…';
 
-        fetch(LIST, {
+        fetch(ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: v, '$ad_agreed': !!agreeNews.checked })
+          body: JSON.stringify({ email: v, ad_agreed: !!agreeNews.checked })
         })
           .then(function (r) { return r.json().catch(function () { return {}; }); })
           .then(function (d) {
-            var code = ((d.code || d.Code || '') + '');
-            var text = ((d.message || d.Message || '') + '');
-            var okNew = code.indexOf('Succeed') === 0;
-            var already = code.indexOf('AlreadyExist') > -1 || text.indexOf('이미') > -1;
-            if (already) {
+            if (d && d.ok && d.status === 'already') {
               show('이미 신청된 이메일입니다. 아래 버튼을 눌러 키노트 자료를 바로 받아보세요.', 'ok');
               track('CompleteRegistration', { status: 'already' });
               unlock();
-            } else if (okNew) {
+            } else if (d && d.ok) {
               show('신청이 완료되었습니다. 아래 버튼에서 키노트 자료를 받아보세요.', 'ok');
               track('Lead');
               if (agreeNews.checked) track('NewsletterOptIn', null, true);
               unlock();
             } else {
-              show(text || '잠시 후 다시 시도해 주세요.', 'err');
+              show('잠시 후 다시 시도해 주세요.', 'err');
               btn.disabled = false; btn.textContent = '키노트 자료 받기';
             }
           })
