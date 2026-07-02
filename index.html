@@ -154,7 +154,7 @@
     <div class="wrap">
       <span class="badge">🔥 키노트 자료 신청</span>
       <h1>K-뷰티 키노트<br /><span class="hl">자료 받기</span></h1>
-      <p class="intro">인스타그램 댓글 <b>‘뷰티마케팅’</b> 참여자를 위한 자료 신청 페이지입니다.<br />이메일만 남기면 <b>키노트 자료를 바로 받아보실 수 있어요.</b></p>
+      <p class="intro">인스타그램 댓글 <b>‘뷰티마케팅’</b> 참여자를 위한 자료 신청 페이지입니다.<br />이메일만 남기면 <b>키노트 자료를 이메일로 바로 보내드려요. 📩</b></p>
 
       <div class="apply">
         <div class="flabel">✉️ 이메일 남기고 키노트 자료 받기</div>
@@ -172,7 +172,7 @@
         <div class="optbox">
           <div class="optbox-hook">💌 이번 키노트 같은 자료, 매달 하나씩 더 받아보고 싶다면</div>
           <label class="consent" for="agreeNews">
-            <input type="checkbox" id="agreeNews" />
+            <input type="checkbox" id="agreeNews" checked />
             <span class="ck"><em class="opt">[선택]</em> 월 1회 뷰스레터 수신에 동의합니다.</span>
           </label>
           <p class="consent-detail">뷰스컴퍼니가 현장에서 검증한 K-뷰티 글로벌 마케팅·콘텐츠·크리에이터·유통·커머스 인사이트를 월 1회 정리해 보내드려요. 스팸 없이 딱 월 1회, 언제든 수신 거부할 수 있습니다.</p>
@@ -242,11 +242,11 @@
           .then(function (r) { return r.json().catch(function () { return {}; }); })
           .then(function (d) {
             if (d && d.ok && d.status === 'already') {
-              show('이미 신청된 이메일입니다. 아래 버튼을 눌러 키노트 자료를 바로 받아보세요.', 'ok');
+              show('이미 신청된 이메일이에요. 아래 버튼에서 키노트 자료를 바로 받아보세요.', 'ok');
               track('CompleteRegistration', { status: 'already' });
               unlock();
             } else if (d && d.ok) {
-              show('신청이 완료되었습니다. 아래 버튼에서 키노트 자료를 받아보세요.', 'ok');
+              show('신청 완료! 키노트 자료를 이메일로 보내드렸어요 📩 아래에서 바로 받아보실 수도 있어요.', 'ok');
               track('Lead');
               if (agreeNews.checked) track('NewsletterOptIn', null, true);
               unlock();
